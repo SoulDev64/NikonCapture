@@ -1,4 +1,3 @@
-from Configuration import *
 from ConfigurationUX import *
 import gphoto2 as gp
 

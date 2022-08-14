@@ -26,7 +26,6 @@ class ConfigurationUX:
     Base configuration
     '''
     def initConf(self) -> None:
-        self.titleWindow  = 'AStrophoto # NikonCapture # CONFIGURATOR'
         self.columnsTitle = ('Slug', 'Title', 'Values')
 
 
@@ -153,6 +152,7 @@ class ConfigurationUX:
                 choices = []
                 for indexChoice in range(config_widget.count_choices()):
                     choice = config_widget.get_choice(indexChoice)
+                    pprint(choice)
                     choices.append(choice)
                     if currentChoice == choice:
                         currentChoiceIndex = indexChoice
@@ -199,6 +199,7 @@ class ConfigurationUX:
                 # wait for config widget
                 config_widget = self.camera.get_single_config(config_name)
                 if config_widget is not None:
+                    pprint(config_widget)
                     break
         
         config_set_response = config_widget.set_value(value)

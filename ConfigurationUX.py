@@ -7,6 +7,19 @@ from pprint import pprint
 
 class ConfigurationUX:
 
+    __choiceType = {
+        gp.GP_WIDGET_SECTION: 'gp.GP_WIDGET_SECTION',
+        gp.GP_WIDGET_TEXT: 'gp.GP_WIDGET_TEXT',
+        gp.GP_WIDGET_RANGE: 'gp.GP_WIDGET_RANGE',
+        gp.GP_WIDGET_TOGGLE: 'gp.GP_WIDGET_TOGGLE',
+        gp.GP_WIDGET_RADIO: 'gp.GP_WIDGET_RADIO',
+        gp.GP_WIDGET_MENU: 'gp.GP_WIDGET_MENU',
+        gp.GP_WIDGET_DATE: 'gp.GP_WIDGET_DATE',
+    }
+    __choiceRw = {
+        1: 'Read',
+        0: 'ReadWrite'
+    }
     '''
     Init function
     '''
@@ -98,7 +111,7 @@ class ConfigurationUX:
         config_tree = camera.get_config(context)
 
         total_child = config_tree.count_children()
-        
+
         for i in range(total_child):
             child = config_tree.get_child(i)
             
@@ -111,6 +124,19 @@ class ConfigurationUX:
                 
                 # Set group
                 tags = []
+                
+                # ISSUE #5 - More debug
+                print('------------------------------------------------------------------------------------')
+                print(grandchild.get_name() + ' # ' + grandchild.get_label() + ' = ' + self.__choiceType[grandchild.get_type()])
+                print(grandchild.get_value())
+                # ----- Choices
+                '''cOption = camera.get_single_config(grandchild.get_name())
+                pprint(grandchild.count_choices())
+                pprint(cOption)
+                for indexChoice in range(cOption.count_choices()):
+                    choice = cOption.get_choice(indexChoice)
+                    pprint(choice)'''
+                
                 if grandchild.get_readonly() == 1:
                     tags.append('r')
                 else:
@@ -148,7 +174,6 @@ class ConfigurationUX:
                 #currentChoice = gp.gp_widget_get_value(config_widget)[1]
                 currentChoice = config_widget.get_value()
                 print('-->')
-                pprint(config_widget.count_choices())
                 choices = []
                 for indexChoice in range(config_widget.count_choices()):
                     choice = config_widget.get_choice(indexChoice)
@@ -156,14 +181,17 @@ class ConfigurationUX:
                     choices.append(choice)
                     if currentChoice == choice:
                         currentChoiceIndex = indexChoice
-                self.editOption(choices,currentChoiceIndex)
+                self.editOption(config_widget.get_type(),config_widget.get_label(),choices,currentChoiceIndex)
                 '''
                 '''
 
 
-    def editOption(self,choices,currentChoice):
+    def editOption(self,type,label,choices,currentChoice):
+        
+        pprint(self.__choiceType[type])
 
-        namelbl = ttk.Label(self.editOptionFrame, text="Options")
+        namelbl = ttk.Label(self.editOptionFrame, text="Edit type: "+self.__choiceType[type])
+        namelbl2 = ttk.Label(self.editOptionFrame, text="Option label: "+label)
         
         choicesvar = StringVar(value=choices)
         print(choices)
@@ -177,8 +205,9 @@ class ConfigurationUX:
         #cancel = ttk.Button(self.editOptionFrame, text="Reset")
 
         namelbl.grid(column=0, row=0, sticky=tk.NSEW, padx=5)
-        self.listOptions.grid(column=0, row=1, sticky=tk.NSEW, pady=5, padx=5)
-        ok.grid(column=0, row=2, sticky=tk.NSEW, padx=5)
+        namelbl2.grid(column=0, row=1, sticky=tk.NSEW, padx=5)
+        self.listOptions.grid(column=0, row=2, sticky=tk.NSEW, pady=5, padx=5)
+        ok.grid(column=0, row=3, sticky=tk.NSEW, padx=5)
         #cancel.grid(column=0, row=3, sticky=(N, S, E, W), pady=5, padx=5)
 
         ok.bind("<Button-1>", self.saveOption)

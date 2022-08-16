@@ -1,5 +1,5 @@
 from ConfigurationUX import *
-import gphoto2 as gp
+from gphoto2 import *
 
 from Dashboard import Dashboard
 from OpenImage import *
@@ -22,7 +22,9 @@ camera = get_camera()
 if camera != -1: # Launch only if Camera are ON and CONNECTED
     
     # Init window (aka master for the app)
-    root.geometry('600x200')
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    root.geometry(str(screen_width) + 'x' + str(screen_height))
 
     # Launch dashboard
     app = Dashboard(root,camera)

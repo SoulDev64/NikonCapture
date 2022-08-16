@@ -7,14 +7,15 @@ from PIL import ImageTk, Image
 from pprint import pprint
 
 class openImage:
-    def __init__(self,master,imagePath):
-        self.master = master
+    def __init__(self,frame,imagePath):
+        self.frame = frame
         isFile = os.path.isfile(imagePath)
         if isFile:
-            frame = ttk.Frame(self.master, width=1200, height=795)
-            frame.pack()
 
-            frame.place(anchor='center', relx=0.5, rely=0.5)
+            # Reset frameView
+            for widget in self.frame.winfo_children():
+                widget.destroy()
+            #self.frame.place(anchor='center', relx=0.5, rely=0.5)
 
             img = Image.open(imagePath)
             #img.thumbnail((1200,795))
@@ -24,7 +25,7 @@ class openImage:
             imgTk = ImageTk.PhotoImage(img)
 
             # Create a Label Widget to display the text or Image
-            label = ttk.Label(frame, image = imgTk)
+            label = ttk.Label(self.frame, image = imgTk)
             label.image = imgTk
 
             label.pack()

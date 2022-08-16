@@ -15,6 +15,7 @@ def get_camera():
 
 root = tk.Tk()
 root.title("NikonCapture # Dashboard")
+# root.configure(bg='black')
 
 # Init the camera link
 camera = get_camera()
@@ -24,6 +25,7 @@ if camera != -1: # Launch only if Camera are ON and CONNECTED
     # Init window (aka master for the app)
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
+
     root.geometry(str(screen_width) + 'x' + str(screen_height))
 
     # Launch dashboard

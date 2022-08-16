@@ -17,7 +17,6 @@ class Preview:
         self.__camera = camera
         self.__canvas = previewCanvas
         self.__preview = False
-        #self.__threadTimer = th.Timer(1.0, self.capture) #0.04
 
     def setInterval(interval, times = -1):
         # This will be the actual decorator,
@@ -54,7 +53,9 @@ class Preview:
 
             # display image
             data = memoryview(file_data)
-            imgTk = ImageTk.PhotoImage(data=data)
+            '''img = Image.frombytes(data=data)
+            img = img.resize(size=(600,400),resample=ImageTk.Image.Resampling.BICUBIC)'''
+            imgTk = ImageTk.PhotoImage(data=data) # (img)
             self.__canvas.create_image(10,10,anchor=NW,image=imgTk)
             self.__canvas.image = imgTk
 

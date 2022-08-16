@@ -7,14 +7,14 @@ from PIL import ImageTk, Image
 from pprint import pprint
 
 class openImage:
-    def __init__(self,frame,imagePath):
-        self.frame = frame
+    def __init__(self,canvas,imagePath):
+        self.__canvas = canvas
         isFile = os.path.isfile(imagePath)
         if isFile:
 
-            # Reset frameView
+            '''# Reset frameView
             for widget in self.frame.winfo_children():
-                widget.destroy()
+                widget.destroy()'''
             #self.frame.place(anchor='center', relx=0.5, rely=0.5)
 
             img = Image.open(imagePath)
@@ -24,11 +24,8 @@ class openImage:
             # Create an object of tkinter ImageTk
             imgTk = ImageTk.PhotoImage(img)
 
-            # Create a Label Widget to display the text or Image
-            label = ttk.Label(self.frame, image = imgTk)
-            label.image = imgTk
-
-            label.pack()
+            self.__canvas.create_image(10,10,anchor=NW,image=imgTk)
+            self.__canvas.image = imgTk
         else:
             # TODO Imaage file are not in the files system
             print('Error: Imaage file are not in the files system')

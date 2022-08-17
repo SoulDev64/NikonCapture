@@ -10,8 +10,9 @@ class ConfigurationUX:
     '''
     Init function
     '''
-    def __init__(self,root,camera) -> None:
+    def __init__(self,ancestor,root,camera) -> None:
 
+        self.ancestor = ancestor
         self.camera = camera
         self.root = root
         self.initConf()
@@ -214,6 +215,9 @@ class ConfigurationUX:
 
         self.tree.item(self.rowsTree[config_name], value=oldValue)
         
+        # Refres Dashboard summary
+        # TODO Make more clean (ex.: event)
+        self.ancestor.getSummary()
         # show a message
         showinfo(title='Information', message='Option <' + self.optionEdited + '> saved\nNew value: ' + selectedChoice)
         

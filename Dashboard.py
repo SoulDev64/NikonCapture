@@ -30,8 +30,12 @@ class Dashboard:
         self.camera = camera
         self.preview = False
         self.captureBaseFileName = "capture_"
+
         self.initUX()
         self.fixGrid()
+
+        self.getSummary()
+        self.capturePreviewStart()
 
     def initUX(self):
 
@@ -39,10 +43,20 @@ class Dashboard:
         #self.frame.configure(bg='black')
         
         self.button0 = tk.Button(self.frame, text = 'Preview', width = 20, command = self.capturePreviewStart)
-        self.button1 = tk.Button(self.frame, text = 'Capture', width = 20, command = self.captureImage)
+        self.button1 = tk.Button(self.frame, text = 'Capture', width = 20, command = self.captureImage, bg='red')
         self.button2 = tk.Button(self.frame, text = 'Edit option', width = 20, command = self.editOption)
         self.button3 = tk.Button(self.frame, text = 'Exit', width = 20, command = lambda: self.master.destroy())# TODO Make a clean exit (ex.: exit camera before)
         
+        # Summary infos
+        self.frameSummary = tk.Frame(self.frame)
+        self.summary = tk.Text(self.frameSummary)
+        scroll = tk.Scrollbar(self.frameSummary)
+        self.summary.configure(yscrollcommand=scroll.set)
+        self.summary.pack(side=tk.LEFT)
+        
+        scroll.config(command=self.summary.yview)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
         # For view the last capture image
         self.frameView = Canvas(self.frame, width= 1200, height= 795) # TODO Set relative size
         # self.frameView.configure(bg='black')
@@ -60,34 +74,47 @@ class Dashboard:
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
 
-        # frame
+        # Global frame
         self.frame.grid(column=0, row=0, sticky=(N, S, E, W))
-        self.frame.columnconfigure(0, weight=2)
-        self.frame.columnconfigure(1, weight=1)
+        self.frame.columnconfigure(0, weight=1)
+        self.frame.columnconfigure(1, weight=2)
         self.frame.rowconfigure(0, weight=0)
         self.frame.rowconfigure(1, weight=0)
         self.frame.rowconfigure(2, weight=0)
         self.frame.rowconfigure(3, weight=0)
         self.frame.rowconfigure(4, weight=0)
+        self.frame.rowconfigure(5, weight=0)
 
-        # frameView (col=0, row=0, colspan=2, rowspan=5)
+        # Canvas Capture View
         self.frameView.grid(column=1, row=0, rowspan=5, sticky=(N, S, E, W))
-        # canvas (col=1, row=0)
+        # Canvas Preview
         self.canvas.grid(column=0, row=0, sticky=(N, E, W))
-        # button0 (col=1, row=1)
-        self.button0.grid(column=0, row=1, sticky=(N))
-        # button1 (col=1, row=2)
-        self.button1.grid(column=0, row=2, sticky=(N))
-        # button2 (col=1, row=3)
-        self.button2.grid(column=0, row=3, sticky=(N))
-        # button3 (col=1, row=4)
-        self.button3.grid(column=0, row=4, sticky=(N))
+        # BT Preview
+        self.button0.grid(column=0, row=1, sticky=(N, E, W))
+        # BT Capture
+        self.button1.grid(column=0, row=2, sticky=(N, E, W))
+        # Summary
+        self.frameSummary.grid(column=0, row=3, sticky=(N, E, W))
+        # BT Options
+        self.button2.grid(column=0, row=4, sticky=(N, E, W))
+        # BT Exit
+        self.button3.grid(column=0, row=5, sticky=(S, E, W))
     
+    def getSummary(self):
+        try:
+            text = self.camera.get_summary()
+            print('Summary')
+            print('=======')
+            self.summary.insert(tk.END, str(text))
+            pprint(text)
+        except Exception as ex:
+            print(str(ex))
+
     def editOption(self):
         self.editWindow = tk.Toplevel(self.master)
         self.editWindow.title("NikonCapture # CONFIGURATOR")
         self.editWindow.geometry('1200x700')
-        self.configApp = ConfigurationUX(self.editWindow,self.camera)
+        self.configApp = ConfigurationUX(self,self.editWindow,self.camera)
 
     def capturePreviewStart(self):
         self.preview.start()
